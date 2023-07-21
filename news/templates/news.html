@@ -1,0 +1,46 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+<p>All News</p>
+
+{% endblock title %}
+
+{% block content %}
+    <h1>Все новости</h1>
+    <h3>{{ time_now|date:'M d Y' }}</h3>
+    <h6>Всего новостей - {{ news | length }}</h6>
+    <hr>
+    {% if news %}
+        <table class="col-lg-12 text-center">
+            <tr>
+                <td>
+                    <b>Название</b>
+                </td>
+                <td>
+                    <b>Описание</b>
+                </td>
+                <td>
+                    <b>Дата</b>
+                </td>
+            </tr>
+{% for new in news %}
+            <tr>
+                <td style="head_text-align: left">
+                     <a href="{% url 'post_detail' new.id %}">{{ new.head_text | Censor }}</a>
+                    <!-- При нажатии на имя товара в таблице нас теперь будет перекидывать на страницу с информацией о товаре -->
+                    </td>
+                <td style="body_text-align: left">
+                    {{ new.body_text | truncatechars:50 | Censor }}
+                </td>
+                <td style="body_text-align: center">
+                    {{ new.createpost_datetime }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+
+{% endblock content %}
