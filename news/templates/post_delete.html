@@ -1,11 +1,13 @@
 {% extends 'flatpages/default.html' %}
+
 {% load custom_filters %}
 
 {% block title %}
-News
+Delete
 {% endblock title %}
 
 {% block content %}
+<h2>Вы действительно хотите удалить данный пост?</h2>
 <h1>Название - {{ new.head_text | Censor }}</h1>
 <p>Текст - {{ new.body_text | Censor }}</p>
 <p>Автор - {{ new.author }}</p>
@@ -13,7 +15,7 @@ News
 <p>Рейтинг - {{ new.rating }}</p>
 <p>Дата загрузки - {{ new.createpost_datetime }}</p>
 
-<a href="{% url 'post_update' new.id %}"><u>Редактировать</u></a> <!-- добавим ссылку на редактирование -->
-
-<a href="{% url 'post_delete' new.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление -->
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить"></form>
 {% endblock content %}

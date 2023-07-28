@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.core.validators import MinValueValidator
 
 class Author(models.Model):
     authoruser = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -28,6 +29,7 @@ class Category(models.Model):
         return f"{self.name_category}"
 
 class Post(models.Model):
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     news = 'NS'
     topic = 'TP'
     VARIANT = [
@@ -38,7 +40,6 @@ class Post(models.Model):
     createpost_datetime = models.DateTimeField(auto_now_add=True)
     head_text = models.CharField(max_length=255, default="Заголовок")
     body_text = models.TextField()
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     category = models.ManyToManyField(Category, through='PostCategory')
     rating = models.SmallIntegerField(default=0)
 
@@ -53,17 +54,17 @@ class Post(models.Model):
     def preview(self):
         return self.body_text[0:123] + '...'
 
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
+
     def __str__(self):
-        dataf = 'Post from {}'.format(self.createpost_datetime.strftime('%d.%m.%Y %H:%M'))
-        return f"{dataf},{self.author},{self.head_text}"
+        return f'{self.choise.VARIANT}'
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
     amount = models.IntegerField(default=1)
 
-    def __str__(self):
-        return f"{self.post},from the category:  {self.category}"
 
 class Comment(models.Model):
     comment_text = models.TextField()
@@ -79,6 +80,3 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
-
-    def __str__(self):
-        return f"{self.createcom_datetime}, {self.userpost}"
