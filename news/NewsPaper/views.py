@@ -74,9 +74,12 @@ class PostAdd(PermissionRequiredMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
+    model = Post
+    context_object_name = 'new'
     template_name = 'add.html'
     form_class = PostForm
     permission_required = ('news.change_post',)
+    success_url = reverse_lazy('news')
 
     #  метод get_object мы используем вместо queryset, чтобы получить информацию об объекте, который мы собираемся редактировать
     def get_object(self, **kwargs):
