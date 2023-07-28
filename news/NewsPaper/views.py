@@ -65,6 +65,15 @@ class PostAdd(PermissionRequiredMixin, CreateView):
         context['form'] = PostForm()
         return context
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        if 'news' in self.request.path:
+            post_type = 'NS'
+        elif 'topic' in self.request.path:
+            post_type = 'TP'
+        self.object.type = post_type
+        return super().form_valid(form)
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)  # создаём новую форму, забиваем в неё данные из POST-запроса
 

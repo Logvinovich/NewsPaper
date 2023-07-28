@@ -25,13 +25,13 @@
             </tr>
             {% for new in filter.qs %}
                 <tr>
-                    <td style="text-align: left">
+                    <td style="text-align: center">
                         {{ new.head_text | Censor }}
                     </td>
-                    <td style="text-align: left">
+                    <td style="text-align: center">
                         {{ new.body_text | truncatechars:50 | Censor }}
                     </td>
-                    <td style="text-align: left">
+                    <td style="text-align: center">
                         {{ new.author }}
                     </td>
                     <td style="text-align: center">
