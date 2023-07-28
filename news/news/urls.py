@@ -23,7 +23,7 @@ urlpatterns = [
     path('', PostList.as_view(), name= 'news'),
     path('<int:pk>', PostDetail.as_view(), name='post_detail'),
     path('search', PostSearch.as_view(), name='post_search'),
-    path('add/', PostAdd.as_view(), name='post_create'),
+    path('add', PostAdd.as_view(), name='post_create'),
     path('create/<int:pk>', PostUpdateView.as_view(), name='post_update'),
     path('delete/<int:pk>', PostDeleteView.as_view(), name='post_delete'),
 ]
