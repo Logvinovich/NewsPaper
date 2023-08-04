@@ -7,7 +7,7 @@ class Redirect(RedirectView):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', Redirect.as_view()),
+    path('', include('protect.urls')),
     path('news/', include('NewsPaper.urls')),
     path('sign/', include('sign.urls')),
     path('accounts/', include('allauth.urls')),
