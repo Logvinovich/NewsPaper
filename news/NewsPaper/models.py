@@ -58,7 +58,7 @@ class Post(models.Model):
         return f'/news/{self.id}'
 
     def __str__(self):
-        return f'{self.choise.VARIANT}'
+        return f'{Post.objects.get(pk=self.pk).get_choise_display()}'
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE)

@@ -67,20 +67,13 @@ class PostAdd(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        if 'news' in self.request.path:
+        if 'post' in self.request.path:
             post_type = 'NS'
         elif 'topic' in self.request.path:
             post_type = 'TP'
-        self.object.type = post_type
+        self.object.choise = post_type
         return super().form_valid(form)
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)  # создаём новую форму, забиваем в неё данные из POST-запроса
-
-        if form.is_valid():  # если пользователь ввёл всё правильно и нигде не ошибся, то сохраняем новый товар
-            form.save()
-
-        return super().get(request, *args, **kwargs)
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'add.html'
@@ -93,14 +86,18 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(PermissionRequiredMixin,DeleteView):
     model = Post
     context_object_name = 'new'
     template_name = 'post_delete.html'
     success_url =  reverse_lazy('news')
+    permission_required = ('news.delete_post',)
 
 
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
 
+@method_decorator(login_required, name='dispatch')
+class ProtectedView(TemplateView):
+    template_name = 'protected_page.html'
