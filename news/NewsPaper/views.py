@@ -98,6 +98,7 @@ class PostDeleteView(PermissionRequiredMixin,DeleteView):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
 
+
 @method_decorator(login_required, name='dispatch')
 class ProtectedView(TemplateView):
     template_name = 'protected_page.html'

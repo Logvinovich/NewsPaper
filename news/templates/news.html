@@ -12,6 +12,7 @@
     <h3>{{ time_now|date:'M d Y' }}</h3>
     <h6>Всего новостей - {{ news | length }}</h6>
     <h6><a href="{% url 'post_search' %}">Поиск</a></h6>
+    <h6><a href="{% url 'post_search' %}">категории</a></h6>
     <hr>
     {% if news %}
         <table class="col-lg-12 text-center">

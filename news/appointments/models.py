@@ -15,10 +15,3 @@ class Appointment(models.Model):
     def __str__(self):
         return f'{self.client_name}: {self.message}'
 
-class Appoint(models.Model):
-    idpk = models.IntegerField()
-
-    idpkid = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return f'{self.idpk}'
