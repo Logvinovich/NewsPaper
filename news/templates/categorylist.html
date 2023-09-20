@@ -41,7 +41,7 @@
                     <a href="{% url 'post_delete' new.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление -->
                 </td>
                 <td>
-                    {% for category in post.category.all %}
+                    {% for category in new.category.all %}
                     <a href="{% url 'category_list' category.id %}">{{ category }}</a>
                     {% endfor %}
                 </td>
