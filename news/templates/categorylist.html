@@ -8,12 +8,15 @@
 {% endblock title %}
 
 {% block content %}
+    {% if is_not_subscriber %}
+        <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">Подписаться</a> </p>
+    {% endif %}
     <h1>Все новости</h1>
     <h3>{{ time_now|date:'M d Y' }}</h3>
     <h6>Всего новостей - {{ news | length }}</h6>
     <h6><a href="{% url 'post_search' %}">Поиск</a></h6>
     <hr>
-    {% if news %}
+    {% if category_news_list %}
         <table class="col-lg-12 text-center">
             <tr>
                 <td>
@@ -29,7 +32,7 @@
                     <b>Дата</b>
                 </td>
             </tr>
-        {% for new in news %}
+        {% for new in category_news_list %}
             <tr>
                 <td style="text-align: left">
                      <a href="{% url 'post_detail' new.id %}">{{ new.head_text | Censor }}</a>
@@ -39,7 +42,7 @@
                 </td>
                 <td>
                     {% for category in post.category.all %}
-                    <a href="{% url 'category_list' category.id %}">{{category}}</a>
+                    <a href="{% url 'category_list' category.id %}">{{ category }}</a>
                     {% endfor %}
                 </td>
                 <td style="text-align: left">
