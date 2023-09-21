@@ -164,6 +164,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
+SITE_URL = 'http://127.0.0.1:8000'
 
 EMAIL_HOST_USER = 'demon.k1ller@yandex.ru'
 EMAIL_HOST_PASSWORD = 'qgfpcftnbjkzvozv'
@@ -177,3 +178,4 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 # если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+

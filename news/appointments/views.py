@@ -1,9 +1,9 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, reverse
 from django.views import View
-from django.core.mail import send_mail
-from NewsPaper.models import Category, Post
 from .models import Appointment
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 
 class Appointment(View):
@@ -16,16 +16,25 @@ class Appointment(View):
             client_name=request.POST['client_name'],
             message=request.POST['message'],
         )
-        appointment.save()
+
+
+        html_content = render_to_string(
+            'appointment_created.html',
+            {
+                'appointment': appointment,
+            }
+        )
+
 
         # отправляем письмо
-        send_mail(
+        msg = EmailMultiAlternatives(
             subject=f'{appointment.client_name} {appointment.date.strftime("%Y-%M-%d")}',
-            # имя клиента и дата записи будут в теме для удобства
-            message=appointment.message,  # сообщение с кратким описанием проблемы
+            body=appointment.message,
             from_email='demon.k1ller@yandex.ru',  # здесь указываете почту, с которой будете отправлять (об этом попозже)
-            recipient_list=['piter_pen1999@mail.ru',]  # здесь список получателей. Например, секретарь, сам врач и т. д.
+            to=['piter_pen1999@mail.ru',]  # здесь список получателей. Например, секретарь, сам врач и т. д.
         )
+        msg.attach_alternative(html_content, "text/html")  # добавляем html
+        msg.send()
 
         return redirect('appointments:make_appointment')
 
