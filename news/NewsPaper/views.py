@@ -106,7 +106,7 @@ class ProtectedView(TemplateView):
 
 class CategoryListView(PostList):
     model = Post
-    template_name = 'news/categorylist.html'
+    template_name = 'categorylist.html'
     context_object_name = 'category_news_list'
 
     def get_queryset(self):
@@ -128,4 +128,4 @@ def subscribe(request, pk):
     category.subscribers.add(user)
 
     message = 'Подписались на рассылку категирии'
-    return render(request, 'news/subscribe.html', {'category': category, 'message': message})
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
