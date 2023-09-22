@@ -1,39 +1,62 @@
 from celery import shared_task
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.template.loader import render_to_string
+from .models import Post, Category
+import datetime
 
-
-@shared_task
-def send_mail_for_sub_once(sub_username, sub_useremail, html_content):
-    print('Задача_одно_письмо - старт')
-    msg = EmailMultiAlternatives(
-        subject=f'Здравствуй, {sub_username}. Новая статья в вашем разделе!',
-        from_email='demon.k1ller@yandex.ru',
-        to=[sub_useremail]
-    )
-
-    msg.attach_alternative(html_content, 'text/html')
-
-    print()
-    print(html_content)
-    print()
-
-    msg.send()
-    print('Таска_одно_письмо - конец')
 
 
 @shared_task
-def send_mail_every_week(sub_username, sub_useremail, html_content):
-    print('Задача_много_писем - старт')
+def send_email_task(pk):
+    post = Post.objects.get(pk=pk)
+    categories = post.category.all()
+    title = post.head_text
+    subscribers_emails = []
+    for category in categories:
+        subscribers_users = category.subscribers.all()
+        for sub_user in subscribers_users:
+            subscribers_emails.append(sub_user.email)
+    html_content = render_to_string(
+        'post_created_email.html',
+        {
+            'text' : f'{post.head_text}',
+            'link' : f'{settings.SITE_URL}/news/{pk}',
+        }
+    )
+
     msg = EmailMultiAlternatives(
-        subject=f'Здравствуй, {sub_username}, новые статьи за прошлую неделю в вашем разделе!',
-        from_email='demon.k1ller@yandex.ru',
-        to=[sub_useremail]
+        subject= title,
+        body='',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=subscribers_emails,
     )
 
     msg.attach_alternative(html_content, 'text/html')
-    print()
-
-    print(html_content)
-
     msg.send()
-    print('Задачи_много_писем - стоп')
+
+
+@shared_task
+def weekly_send_email_task():
+    today = datetime.datetime.now()
+    last_week = today - datetime.timedelta(days=7)
+    posts = Post.objects.filter(date_creation__gte=last_week)
+    categories = set(posts.values_list('category__name_category', flat=True))
+    subscribers = set(
+        Category.objects.filter(name_category__in=categories).values_list('subscribers__email', flat=True))
+    html_content = render_to_string(
+        'dally_post.html',
+        {
+            'link': settings.SITE_URL,
+            'posts': posts,
+        }
+    )
+    msg = EmailMultiAlternatives(
+        subject='Статьи за неделю',
+        body='',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=subscribers,
+    )
+
+    msg.attach_alternative(html_content, 'text/html')
+    msg.send()
