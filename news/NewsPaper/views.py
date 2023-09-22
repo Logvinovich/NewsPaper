@@ -129,3 +129,50 @@ def subscribe(request, pk):
 
     message = 'Подписались на рассылку категирии'
     return render(request, 'subscribe.html', {'category': category, 'message': message})
+
+
+def send_mail_for_sub(instance):
+    print('Представления - начало')
+    print()
+    print('====================ПРОВЕРКА СИГНАЛОВ===========================')
+    print()
+    print('задача - отправка письма подписчикам при добавлении новой статьи')
+
+    sub_text = instance.head_text
+
+    category = Category.objects.get(pk=Post.objects.get(pk=instance.pk).category.pk)
+    print()
+    print('category:', category)
+    print()
+    subscribers = category.subscribers.all()
+
+
+    print('Адреса рассылки:')
+    for pos in subscribers:
+        print(pos.email)
+
+    print()
+    print()
+    print()
+    for subscriber in subscribers:
+
+        print('**********************', subscriber.email, '**********************')
+        print(subscriber)
+        print('Адресат:', subscriber.email)
+
+        html_content = render_to_string(
+            'mail.html', {'user': subscriber, 'head_text': sub_text[:50], 'post': instance})
+
+        sub_username = subscriber.username
+        sub_useremail = subscriber.email
+
+        print()
+        print(html_content)
+        print()
+
+        send_mail_for_sub_once.delay(sub_username, sub_useremail, html_content)
+
+
+    print('Представления - конец')
+
+    return redirect('/news/')

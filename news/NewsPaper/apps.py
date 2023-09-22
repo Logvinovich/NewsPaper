@@ -7,3 +7,5 @@ class NewspaperConfig(AppConfig):
 
     def ready(self):
         import NewsPaper.signals
+
+
