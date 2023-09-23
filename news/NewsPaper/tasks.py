@@ -11,7 +11,7 @@ import datetime
 def send_email_task(pk):
     post = Post.objects.get(pk=pk)
     categories = post.category.all()
-    title = post.head_text
+    title = post.body_text
     subscribers_emails = []
     for category in categories:
         subscribers_users = category.subscribers.all()
@@ -20,7 +20,7 @@ def send_email_task(pk):
     html_content = render_to_string(
         'post_created_email.html',
         {
-            'text' : f'{post.head_text}',
+            'body_text' : f'{post.head_text}',
             'link' : f'{settings.SITE_URL}/news/{pk}',
         }
     )
@@ -40,7 +40,7 @@ def send_email_task(pk):
 def weekly_send_email_task():
     today = datetime.datetime.now()
     last_week = today - datetime.timedelta(days=7)
-    posts = Post.objects.filter(date_creation__gte=last_week)
+    posts = Post.objects.filter(createpost_datetime__gte=last_week)
     categories = set(posts.values_list('category__name_category', flat=True))
     subscribers = set(
         Category.objects.filter(name_category__in=categories).values_list('subscribers__email', flat=True))

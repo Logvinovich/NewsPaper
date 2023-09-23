@@ -73,7 +73,9 @@ class PostAdd(PermissionRequiredMixin, CreateView):
         elif 'topic' in self.request.path:
             post_type = 'TP'
         self.object.choise = post_type
+
         return super().form_valid(form)
+
 
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
@@ -126,6 +128,5 @@ def subscribe(request, pk):
     user = request.user
     category = Category.objects.get(id=pk)
     category.subscribers.add(user)
-
     message = 'Подписались на рассылку категирии'
     return render(request, 'subscribe.html', {'category': category, 'message': message})
