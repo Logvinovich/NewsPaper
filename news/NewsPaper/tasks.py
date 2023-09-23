@@ -11,7 +11,7 @@ import datetime
 def send_email_task(pk):
     post = Post.objects.get(pk=pk)
     categories = post.category.all()
-    title = post.body_text
+    title = post.head_text
     subscribers_emails = []
     for category in categories:
         subscribers_users = category.subscribers.all()
@@ -20,7 +20,7 @@ def send_email_task(pk):
     html_content = render_to_string(
         'post_created_email.html',
         {
-            'body_text' : f'{post.head_text}',
+            'text' : f'{post.head_text}',
             'link' : f'{settings.SITE_URL}/news/{pk}',
         }
     )
