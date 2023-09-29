@@ -73,7 +73,6 @@ class PostAdd(PermissionRequiredMixin, CreateView):
         elif 'topic' in self.request.path:
             post_type = 'TP'
         self.object.choise = post_type
-
         return super().form_valid(form)
 
 
