@@ -250,28 +250,28 @@ LOGGING = {
             'level': 'INFO',
             'filters': ['require_debug_false'],
             'class': 'logging.FileHandler',
-            'filename': 'general.log',
+            'filename': 'general',
             'formatter': 'general_security_log'
         },
 
         'file_security': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'security.log',
+            'filename': 'security',
             'formatter': 'general_security_log'
         },
 
         'file_errors': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': 'errors.log',
+            'filename': 'errors',
             'formatter': 'error_critical'
         },
 
         'file_critical': {
             'level': 'CRITICAL',
             'class': 'logging.FileHandler',
-            'filename': 'errors.log',
+            'filename': 'errors',
             'formatter': 'error_critical'
         },
 
