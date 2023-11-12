@@ -9,8 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
+import logging
+
+logger = logging.getLogger(__name__)
 
 class PostList(ListView):
+    logger.info('INFO')
     model = Post
     template_name = 'news.html'
     context_object_name = 'news'
@@ -32,6 +37,17 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'new.html'
     context_object_name = 'new'
+
+    def get_object(self, *args, **kwargs):
+
+        obj = cache.get(f'product-{self.kwargs["pk"]}',
+                        None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'product-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 class PostSearch(ListView):
     model = Post
